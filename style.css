@@ -54,6 +54,15 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
   color:var(--pink-dark);
 }
 
+.nav-inner{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;   /* ⬅️ هاي المسافة بين اللوجو واللينكات */
+}
+
+
+
 /* ================= PRODUCTS GRID ================= */
 .product-card{
   display:flex;
@@ -555,14 +564,15 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
 
 /* اسم البراند */
 .brand-name{
-  font-size:20px;
-  font-weight:800;
-  letter-spacing:0.5px;
+  font-size:28px;       /* ⬅️ كبرناه من 20px */
+  font-weight:900;      /* زيادة الثقل لتبرز أكثر */
+  letter-spacing:1px;   /* لتصبح أحرف متباعدة قليلاً */
+  line-height:1.1;      /* لضبط الارتفاع بشكل أفضل */
   color:#cc3292;
   position:relative;
-  line-height:1;
   text-transform:capitalize;
 }
+
 
 /* خط سفلي ناعم متحرك */
 .brand-name::after{

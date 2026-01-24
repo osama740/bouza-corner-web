@@ -94,13 +94,18 @@ document.querySelector(".clear-cart").onclick = () => { cart.length = 0; renderC
 document.querySelector(".whatsapp").onclick = () => {
   if (!cart.length) return alert("السلة فارغة!");
 
-  let msg = " طلب Bouza Corner:"; // no extra newline at start
+  let msg = " طلب Bouza Corner:"; // start clean, no BOM issues
+
+  let total = 0;
 
   cart.forEach((item, index) => {
     msg += `\n${index + 1}. ${item.name} (${item.size})`;
     if (item.notes) msg += ` - ملاحظات: ${item.notes}`;
     msg += ` - ${item.price.toLocaleString()} L.L`;
+    total += item.price;
   });
+
+  msg += `\n\n الإجمالي: ${total.toLocaleString()} L.L`; // total at the end
 
   const encodedMsg = encodeURIComponent(msg);
   const whatsappNumber = "96103755931"; // ضع رقمك هنا

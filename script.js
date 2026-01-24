@@ -18,7 +18,9 @@ document.querySelectorAll(".sizes button").forEach(btn => {
     btn.classList.add("active");
 
     const card = btn.closest(".product-card");
-    card.querySelector(".price").innerText = btn.dataset.price + " L.L";
+  card.querySelector(".price").innerText = Number(btn.dataset.price).toLocaleString() + " L.L";
+
+
   };
 });
 

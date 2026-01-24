@@ -108,44 +108,88 @@ document.querySelector(".whatsapp").onclick = () => {
   const encodedMsg = encodeURIComponent(msg);
   window.open(`https://wa.me/${whatsappNumber}?text=${encodedMsg}`, "_blank");
 };
+/* ================= NAV ACTIVE ON SCROLL (h2 trigger) ================= */
+const sections = document.querySelectorAll("section[id]");
+const navLinks = document.querySelectorAll(".nav-link");
 
-/* ================= NAV ACTIVE ON SCROLL ================= */
-document.addEventListener("DOMContentLoaded", () => {
-  const sections = document.querySelectorAll("section[id]");
-  const navLinks = document.querySelectorAll(".nav-link");
+// Helper to set active link
+function setActiveLink(id) {
+  navLinks.forEach(link => link.classList.remove("active"));
+  const link = document.querySelector(`.nav-link[href="#${id}"]`);
+  if (link) link.classList.add("active");
+}
 
-  window.addEventListener("scroll", () => {
-    let scrollY = window.scrollY + 120;
-    sections.forEach(section => {
-      const top = section.offsetTop;
-      const height = section.offsetHeight;
-      const id = section.getAttribute("id");
+// Scroll event
+window.addEventListener("scroll", () => {
+  let scrollY = window.scrollY;
+  let currentId = sections[0].id; // default first section
 
-      if (scrollY >= top && scrollY < top + height) {
-        navLinks.forEach(link => link.classList.remove("active"));
-        document.querySelector(`.nav-link[href="#${id}"]`)?.classList.add("active");
-      }
-    });
+  sections.forEach(section => {
+    const h2 = section.querySelector("h2");
+    if (!h2) return;
+
+    const h2Top = h2.getBoundingClientRect().top + window.scrollY;
+    const triggerPoint = window.innerHeight / 2; // trigger when h2 reaches middle of viewport
+
+    if(scrollY + triggerPoint >= h2Top){
+      currentId = section.id;
+    }
   });
-});
 
-/* ================= SMOOTH SCROLL NAV ================= */
-document.querySelectorAll('.nav-link').forEach(link => {
-  link.addEventListener('click', e => {
+  setActiveLink(currentId);
+});
+/* ================= SMOOTH SCROLL WITH CONTROLLED SPEED ================= */
+function smoothScrollTo(targetY, duration = 600) { // duration in ms
+  const startY = window.scrollY;
+  const distance = targetY - startY;
+  let startTime = null;
+
+  function animation(currentTime) {
+    if (!startTime) startTime = currentTime;
+    const timeElapsed = currentTime - startTime;
+    const progress = Math.min(timeElapsed / duration, 1);
+    
+    // ease in-out function
+    const ease = progress < 0.5
+      ? 2 * progress * progress
+      : -1 + (4 - 2 * progress) * progress;
+
+    window.scrollTo(0, startY + distance * ease);
+
+    if (timeElapsed < duration) {
+      requestAnimationFrame(animation);
+    }
+  }
+
+  requestAnimationFrame(animation);
+}
+
+// Apply to nav links
+navLinks.forEach(link => {
+  link.addEventListener("click", e => {
     e.preventDefault();
-    const targetId = link.getAttribute('href');
+    const targetId = link.getAttribute("href");
     const targetSection = document.querySelector(targetId);
-    if (!targetSection) return;
+    if(!targetSection) return;
 
     const navHeight = document.querySelector('.navbar').offsetHeight;
-    const sectionTop =
-      targetSection.getBoundingClientRect().top +
-      window.pageYOffset -
-      navHeight - 10;
+    const sectionTop = targetSection.offsetTop - navHeight - 10;
 
-    window.scrollTo({
-      top: sectionTop,
-      behavior: 'smooth'
-    });
+    // Use our custom smooth scroll
+    smoothScrollTo(sectionTop, 800); // 800ms = slower, smooth feeling
+
+    // Update active immediately
+    setActiveLink(targetId.replace("#",""));
   });
 });
+
+
+// Slow down manual scroll
+window.addEventListener('wheel', (e) => {
+  e.preventDefault(); // prevent default fast scroll
+  window.scrollBy({
+    top: e.deltaY * 0.3, // adjust 0.3 to your preferred speed (smaller = slower)
+    left: 0,
+    behavior: 'auto'
+  });
+}, { passive: false });

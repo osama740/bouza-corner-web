@@ -608,3 +608,35 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
   70%{width:100%; opacity:1;}
   100%{width:0%; opacity:0;}
 }
+.products-section h2 {
+  font-size:28px;
+  color:#cc3292;       /* letter color */
+  text-align:right;
+  margin-top:40px;
+  margin-bottom:24px;
+  position:relative;
+  text-transform:capitalize;
+  letter-spacing:1px;
+
+  /* neon glow in matching pink/light magenta */
+  text-shadow:
+    0 0 4px #e46da8,
+    0 0 8px #e46da8,
+    0 0 16px #e46da8,
+    0 0 24px rgba(228,109,168,0.5);
+
+  animation: neonFlicker 1.8s infinite alternate;
+}
+
+@keyframes neonFlicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    text-shadow:
+      0 0 4px #e46da8,
+      0 0 8px #e46da8,
+      0 0 16px #e46da8,
+      0 0 24px rgba(228,109,168,0.5);
+  }
+  20%, 24%, 55% {
+    text-shadow: none; /* flicker off */
+  }
+}

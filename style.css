@@ -35,7 +35,7 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
 .nav-links{
   display:flex;
   list-style:none;
-  gap:15px;
+  gap:14px;
   flex-wrap:wrap;
 }
 
@@ -47,6 +47,9 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
   border-radius:10px;
   transition:0.3s;
 }
+
+
+
 
 .nav-link.active,
 .nav-link:hover{

@@ -701,3 +701,6 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
 }
 
 
+html {
+  scroll-padding-top: 70px; /* set this to your navbar height */
+}

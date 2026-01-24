@@ -18,9 +18,13 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:12px 20px;
-  box-shadow:0 3px 15px rgba(0,0,0,.08);
+
+  padding:6px 14px;        /* ⬅️ خففنا الارتفاع */
+  min-height:48px;         /* ⬅️ حد أقصى للعلو */
+  
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
 }
+
 
 .navbar .logo{
   color:var(--pink-dark);
@@ -471,4 +475,126 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
 
 #cancelBtn:hover{
   background:#999;
+}
+
+
+
+.logo-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* مربع النيون */
+.logo-neon{
+  position:relative;
+  width:60px;
+  height:60px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+  overflow:hidden;
+}
+
+/* الصورة */
+.logo-neon img{
+  width:44px;
+  height:44px;
+  object-fit:contain;
+  z-index:2;
+}
+
+/* الإطار النيون المتحرك */
+.logo-neon::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:16px;
+  background:conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    #cc3292 60deg,
+    transparent 120deg,
+    transparent 180deg,
+    #cc3292 240deg,
+    transparent 300deg,
+    transparent 360deg
+  );
+  animation:rotateNeon 3s linear infinite;
+}
+
+/* قص الإطار ليصير حدود فقط */
+.logo-neon::after{
+  content:"";
+  position:absolute;
+  inset:4px;
+  background:#fff;
+  border-radius:12px;
+  z-index:1;
+}
+
+/* توهج ناعم */
+.logo-neon{
+  box-shadow:
+    0 0 12px rgba(204,50,146,.45),
+    inset 0 0 8px rgba(204,50,146,.25);
+}
+
+/* حركة الدوران */
+@keyframes rotateNeon{
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+/* اسم البراند */
+.brand-name{
+  font-size:20px;
+  font-weight:800;
+  letter-spacing:0.5px;
+  color:#cc3292;
+  position:relative;
+  line-height:1;
+  text-transform:capitalize;
+}
+
+/* خط سفلي ناعم متحرك */
+.brand-name::after{
+  content:"";
+  position:absolute;
+  bottom:-6px;
+  left:0;
+  width:0%;
+  height:3px;
+  border-radius:6px;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    #cc3292,
+    #e46da8,
+    #cc3292,
+    transparent
+  );
+  animation:brandLine 3s ease-in-out infinite;
+}
+
+/* توهج خفيف */
+.brand-name{
+  text-shadow:
+    0 0 8px rgba(204,50,146,.35),
+    0 0 14px rgba(204,50,146,.2);
+}
+
+/* أنميشن الخط */
+@keyframes brandLine{
+  0%{width:0%; opacity:0;}
+  30%{width:100%; opacity:1;}
+  70%{width:100%; opacity:1;}
+  100%{width:0%; opacity:0;}
 }

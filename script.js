@@ -93,26 +93,31 @@ document.querySelector(".close-cart").onclick = () => cartOverlay.classList.remo
 
 /* ================= CLEAR CART ================= */
 document.querySelector(".clear-cart").onclick = () => { cart.length = 0; renderCart(); };
+/* ================= WHATSAPP ================= */
 document.querySelector(".whatsapp").onclick = () => {
   if (!cart.length) return alert("السلة فارغة!");
 
-  let msg = " طلب Bouza Corner:"; // start clean, no BOM issues
-
-  let total = 0;
+  let msg = ` طلب Bouza Corner:\n\n`;
 
   cart.forEach((item, index) => {
-    msg += `\n${index + 1}. ${item.name} (${item.size})`;
-    if (item.notes) msg += ` - ملاحظات: ${item.notes}`;
-    msg += ` - ${item.price.toLocaleString()} L.L`;
-    total += item.price;
+    msg += `${index + 1}. ${item.name} (${item.size})`;
+    if(item.notes) msg += ` - ملاحظات: ${item.notes}`;
+    msg += ` - ${item.price.toLocaleString()} L.L\n`;
   });
 
-  msg += `\n\n الإجمالي: ${total.toLocaleString()} L.L`; // total at the end
+  // Add total at the end
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  msg += `\nالمجموع: ${total.toLocaleString()} L.L`;
 
+  const whatsappNumber = "96103755931"; // replace with your number
   const encodedMsg = encodeURIComponent(msg);
-  const whatsappNumber = "96103755931"; // ضع رقمك هنا
   window.open(`https://wa.me/${whatsappNumber}?text=${encodedMsg}`, "_blank");
-};
+
+  // Clear the cart after sending
+  cart.length = 0;
+  renderCart();
+
+}
 
 /* ================= NAV ACTIVE ON SCROLL (h2 trigger) ================= */
 const sections = document.querySelectorAll("section[id]");

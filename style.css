@@ -123,7 +123,7 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
 
 .product-card h3{
   margin:0 0 8px;
-  font-size:16px;
+  font-size:22px;
   color:var(--pink-dark);
 }
 
@@ -670,9 +670,9 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
   70%{width:100%; opacity:1;}
   100%{width:0%; opacity:0;}
 }
-.products-section h2 {
+.products-section h2{
   font-size:28px;
-  color:#cc3292;       /* letter color */
+  color:#cc3292;       /* لون النص */
   text-align:right;
   margin-top:40px;
   margin-bottom:24px;
@@ -680,30 +680,85 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
   text-transform:capitalize;
   letter-spacing:1px;
 
-  /* neon glow in matching pink/light magenta */
+  /* توهج ناعم وثابت (بدون وميض) */
   text-shadow:
-    0 0 4px #e46da8,
-    0 0 8px #e46da8,
-    0 0 16px #e46da8,
-    0 0 24px rgba(228,109,168,0.5);
-
-  animation: neonFlicker 1.8s infinite alternate;
-}
-
-@keyframes neonFlicker {
-  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-    text-shadow:
-      0 0 4px #e46da8,
-      0 0 8px #e46da8,
-      0 0 16px #e46da8,
-      0 0 24px rgba(228,109,168,0.5);
-  }
-  20%, 24%, 55% {
-    text-shadow: none; /* flicker off */
-  }
+    0 0 4px rgba(228,109,168,.6),
+    0 0 10px rgba(228,109,168,.45),
+    0 0 18px rgba(228,109,168,.35);
 }
 
 
 html {
   scroll-padding-top: 70px; /* set this to your navbar height */
+}
+/* ===== WELCOME OVERLAY ===== */
+/* ===== WELCOME SCREEN ===== */
+#welcomeScreen{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(
+    135deg,
+    #fff,
+    #ffe6f1
+  );
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+
+  animation: welcomeFadeOut 1s ease forwards;
+  animation-delay:2.8s; /* وقت البقاء */
+}
+
+.welcome-content{
+  text-align:center;
+  animation: welcomeFadeIn 1.2s ease forwards;
+}
+
+.welcome-logo{
+  font-size:64px;
+  margin-bottom:12px;
+  filter: drop-shadow(0 0 12px rgba(204,50,146,.6));
+}
+
+.welcome-content h1{
+  font-size:32px;
+  color:#cc3292;
+  margin-bottom:6px;
+  text-shadow:0 0 14px rgba(204,50,146,.35);
+}
+
+.welcome-content p{
+  font-size:16px;
+  color:#777;
+  letter-spacing:1px;
+}
+
+/* دخول */
+@keyframes welcomeFadeIn{
+  from{
+    opacity:0;
+    transform:scale(.95);
+  }
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+/* خروج */
+@keyframes welcomeFadeOut{
+  to{
+    opacity:0;
+    visibility:hidden;
+  }
+}
+
+h2, h3, .price, .brand-name{
+  font-weight:700;
+  letter-spacing:0.5px;
+}
+
+*{
+  font-family:'Changa', system-ui, sans-serif;
 }

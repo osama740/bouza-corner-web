@@ -96,23 +96,41 @@ document.querySelector(".clear-cart").onclick = () => { cart.length = 0; renderC
 document.querySelector(".whatsapp").onclick = () => {
   if (!cart.length) return alert("السلة فارغة!");
 
-  let msg = " طلب Bouza Corner:"; // start clean, no BOM issues
-
   let total = 0;
+  let msg = ` طلب Bouza Corner\n\n`;
 
   cart.forEach((item, index) => {
-    msg += `\n${index + 1}. ${item.name} (${item.size})`;
-    if (item.notes) msg += ` - ملاحظات: ${item.notes}`;
-    msg += ` - ${item.price.toLocaleString()} L.L`;
     total += item.price;
+    msg += `${index + 1}. ${item.name} (${item.size})`;
+    if (item.notes) msg += ` - ملاحظات: ${item.notes}`;
+    msg += ` - ${item.price.toLocaleString()} L.L\n`;
   });
 
-  msg += `\n\n الإجمالي: ${total.toLocaleString()} L.L`; // total at the end
+  msg += `\nالمجموع: ${total.toLocaleString()} L.L`;
 
+  const whatsappNumber = "96103755931";
   const encodedMsg = encodeURIComponent(msg);
-  const whatsappNumber = "96103755931"; // ضع رقمك هنا
-  window.open(`https://wa.me/${whatsappNumber}?text=${encodedMsg}`, "_blank");
+
+  window.open(
+    `https://wa.me/${whatsappNumber}?text=${encodedMsg}`,
+    "_blank"
+  );
+
+  // ===== RESET CART =====
+  cart.length = 0;
+  renderCart();
+  cartOverlay.classList.remove("active");
+
+  // ===== SHOW SUCCESS TOAST =====
+  const toast = document.getElementById("successToast");
+  toast.classList.add("show");
+
+  // Hide after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
 };
+
 
 /* ================= NAV ACTIVE ON SCROLL (h2 trigger) ================= */
 const sections = document.querySelectorAll("section[id]");

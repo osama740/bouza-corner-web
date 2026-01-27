@@ -96,41 +96,23 @@ document.querySelector(".clear-cart").onclick = () => { cart.length = 0; renderC
 document.querySelector(".whatsapp").onclick = () => {
   if (!cart.length) return alert("السلة فارغة!");
 
+  let msg = " طلب Bouza Corner:"; // start clean, no BOM issues
+
   let total = 0;
-  let msg = ` طلب Bouza Corner\n\n`;
 
   cart.forEach((item, index) => {
-    total += item.price;
-    msg += `${index + 1}. ${item.name} (${item.size})`;
+    msg += `\n${index + 1}. ${item.name} (${item.size})`;
     if (item.notes) msg += ` - ملاحظات: ${item.notes}`;
-    msg += ` - ${item.price.toLocaleString()} L.L\n`;
+    msg += ` - ${item.price.toLocaleString()} L.L`;
+    total += item.price;
   });
 
-  msg += `\nالمجموع: ${total.toLocaleString()} L.L`;
+  msg += `\n\n الإجمالي: ${total.toLocaleString()} L.L`; // total at the end
 
-  const whatsappNumber = "96103755931";
   const encodedMsg = encodeURIComponent(msg);
-
-  window.open(
-    `https://wa.me/${whatsappNumber}?text=${encodedMsg}`,
-    "_blank"
-  );
-
-  // ===== RESET CART =====
-  cart.length = 0;
-  renderCart();
-  cartOverlay.classList.remove("active");
-
-  // ===== SHOW SUCCESS TOAST =====
-  const toast = document.getElementById("successToast");
-  toast.classList.add("show");
-
-  // Hide after 3 seconds
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 3000);
+  const whatsappNumber = "96103755931"; // ضع رقمك هنا
+  window.open(`https://wa.me/${whatsappNumber}?text=${encodedMsg}`, "_blank");
 };
-
 
 /* ================= NAV ACTIVE ON SCROLL (h2 trigger) ================= */
 const sections = document.querySelectorAll("section[id]");
@@ -217,3 +199,25 @@ window.addEventListener('wheel', (e) => {
     behavior: 'auto'
   });
 }, { passive: false });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const welcomeScreen = document.getElementById("welcomeScreen");
+
+  // Show only once per session
+  if (!sessionStorage.getItem("welcomeShown")) {
+    welcomeScreen.classList.add("show"); // fade in
+
+    // Stay visible 2s then fade out
+    setTimeout(() => {
+      welcomeScreen.style.opacity = "0"; // fade out
+      setTimeout(() => {
+        welcomeScreen.style.display = "none"; // hide completely
+      }, 1000); // match CSS transition
+    }, 2000);
+
+    sessionStorage.setItem("welcomeShown", "true");
+  } else {
+    welcomeScreen.style.display = "none";
+  }
+});

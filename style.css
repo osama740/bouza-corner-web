@@ -549,41 +549,45 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
 }
 
 
-
-.logo-box{
-  display:flex;
-  align-items:center;
-  gap:10px;
+/* ================= LOGO BOX VERTICAL ================= */
+.logo-box {
+  display: flex;
+  flex-direction: column; /* stack vertically */
+  align-items: center;    /* center horizontally */
+  gap: 8px;               /* space between logo and name */
 }
 
-/* مربع النيون */
-.logo-neon{
-  position:relative;
-  width:60px;
-  height:60px;
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#fff;
-  overflow:hidden;
+/* ================= NEON LOGO SQUARE ================= */
+.logo-neon {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  overflow: hidden;
+  box-shadow:
+    0 0 12px rgba(204,50,146,.45),
+    inset 0 0 8px rgba(204,50,146,.25);
 }
 
-/* الصورة */
-.logo-neon img{
-  width:44px;
-  height:44px;
-  object-fit:contain;
-  z-index:2;
+/* Logo image */
+.logo-neon img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  z-index: 2;
 }
 
-/* الإطار النيون المتحرك */
-.logo-neon::before{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  border-radius:16px;
-  background:conic-gradient(
+/* Animated neon frame */
+.logo-neon::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 16px;
+  background: conic-gradient(
     from 0deg,
     transparent 0deg,
     #cc3292 60deg,
@@ -593,59 +597,50 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
     transparent 300deg,
     transparent 360deg
   );
-  animation:rotateNeon 3s linear infinite;
+  animation: rotateNeon 3s linear infinite;
 }
 
-/* قص الإطار ليصير حدود فقط */
-.logo-neon::after{
-  content:"";
-  position:absolute;
-  inset:4px;
-  background:#fff;
-  border-radius:12px;
-  z-index:1;
+/* Cut out inner square */
+.logo-neon::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  background: #fff;
+  border-radius: 12px;
+  z-index: 1;
 }
 
-/* توهج ناعم */
-.logo-neon{
-  box-shadow:
-    0 0 12px rgba(204,50,146,.45),
-    inset 0 0 8px rgba(204,50,146,.25);
+/* Neon rotation animation */
+@keyframes rotateNeon {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-/* حركة الدوران */
-@keyframes rotateNeon{
-  0%{transform:rotate(0deg);}
-  100%{transform:rotate(360deg);}
-}
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-/* اسم البراند */
-.brand-name{
-  font-size:28px;       /* ⬅️ كبرناه من 20px */
-  font-weight:900;      /* زيادة الثقل لتبرز أكثر */
-  letter-spacing:1px;   /* لتصبح أحرف متباعدة قليلاً */
-  line-height:1.1;      /* لضبط الارتفاع بشكل أفضل */
-  color:#cc3292;
-  position:relative;
-  text-transform:capitalize;
+/* ================= BRAND NAME ================= */
+.brand-name {
+  font-size: 28px;       /* bigger */
+  font-weight: 900;      /* bold for emphasis */
+  letter-spacing: 1px;   
+  line-height: 1.1;      
+  color: #cc3292;
+  position: relative;
+  text-transform: capitalize;
+  text-align: center;    /* center under logo */
+  text-shadow:
+    0 0 8px rgba(204,50,146,.35),
+    0 0 14px rgba(204,50,146,.2);
 }
 
-
-/* خط سفلي ناعم متحرك */
-.brand-name::after{
-  content:"";
-  position:absolute;
-  bottom:-6px;
-  left:0;
-  width:0%;
-  height:3px;
-  border-radius:6px;
-  background:linear-gradient(
+/* Animated underline */
+.brand-name::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  border-radius: 6px;
+  background: linear-gradient(
     90deg,
     transparent,
     #cc3292,
@@ -653,23 +648,16 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
     #cc3292,
     transparent
   );
-  animation:brandLine 3s ease-in-out infinite;
+  animation: brandLine 3s ease-in-out infinite;
 }
 
-/* توهج خفيف */
-.brand-name{
-  text-shadow:
-    0 0 8px rgba(204,50,146,.35),
-    0 0 14px rgba(204,50,146,.2);
+@keyframes brandLine {
+  0% { width: 0%; opacity: 0; }
+  30% { width: 100%; opacity: 1; }
+  70% { width: 100%; opacity: 1; }
+  100% { width: 0%; opacity: 0; }
 }
 
-/* أنميشن الخط */
-@keyframes brandLine{
-  0%{width:0%; opacity:0;}
-  30%{width:100%; opacity:1;}
-  70%{width:100%; opacity:1;}
-  100%{width:0%; opacity:0;}
-}
 .products-section h2{
   font-size:28px;
   color:#cc3292;       /* لون النص */
@@ -692,67 +680,40 @@ html {
   scroll-padding-top: 70px; /* set this to your navbar height */
 }
 /* ===== WELCOME OVERLAY ===== */
-/* ===== WELCOME SCREEN ===== */
-#welcomeScreen{
-  position:fixed;
-  inset:0;
-  background:linear-gradient(
-    135deg,
-    #fff,
-    #ffe6f1
-  );
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
+/* Fullscreen welcome overlay with glass blur */
+#welcomeScreen {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.15); /* glass blur effect */
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
 
-  animation: welcomeFadeOut 1s ease forwards;
-  animation-delay:2.8s; /* وقت البقاء */
+  opacity: 0;             /* start hidden */
+  transition: opacity 1s ease;  /* smooth fade */
+  pointer-events: none;   /* don't block clicks */
 }
 
-.welcome-content{
-  text-align:center;
-  animation: welcomeFadeIn 1.2s ease forwards;
+/* Show screen */
+#welcomeScreen.show {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.welcome-logo{
-  font-size:64px;
-  margin-bottom:12px;
-  filter: drop-shadow(0 0 12px rgba(204,50,146,.6));
+/* Centered logo */
+.welcome-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.welcome-content h1{
-  font-size:32px;
-  color:#cc3292;
-  margin-bottom:6px;
-  text-shadow:0 0 14px rgba(204,50,146,.35);
+.welcome-logo {
+  width: 200px;   /* adjust size as needed */
+  height: auto;
 }
 
-.welcome-content p{
-  font-size:16px;
-  color:#777;
-  letter-spacing:1px;
-}
-
-/* دخول */
-@keyframes welcomeFadeIn{
-  from{
-    opacity:0;
-    transform:scale(.95);
-  }
-  to{
-    opacity:1;
-    transform:scale(1);
-  }
-}
-
-/* خروج */
-@keyframes welcomeFadeOut{
-  to{
-    opacity:0;
-    visibility:hidden;
-  }
-}
 
 h2, h3, .price, .brand-name{
   font-weight:700;
@@ -763,25 +724,3 @@ h2, h3, .price, .brand-name{
   font-family:'Changa', system-ui, sans-serif;
 }
 
-/* ================= SUCCESS TOAST ================= */
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: rgba(51, 51, 51, 0.9);
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-weight: bold;
-  font-size: 14px;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 9999;
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}

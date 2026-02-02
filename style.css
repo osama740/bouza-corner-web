@@ -43,10 +43,18 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
   text-decoration:none;
   color:var(--gray);
   font-weight:bold;
-  padding:6px 12px;
+
+  padding:4px 6px;        /* ⬅️ أخف */
   border-radius:10px;
   transition:0.3s;
+
+  display:flex;           /* ⬅️ مهم */
+  flex-direction:column;  /* ⬅️ أيقونة فوق النص */
+  align-items:center;
+  gap:2px;                /* ⬅️ يقلل الارتفاع */
+  font-size:13px;
 }
+
 
 
 

@@ -823,3 +823,51 @@ h2, h3, .price, .brand-name{
   color: #e46da8;
   transform: scale(1.2);
 }
+/* نوع العبوة */
+.variants {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.variant-btn {
+  flex: 1;
+  padding: 6px;
+  border-radius: 10px;
+  border: none;
+  background: #f3f3f3;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.variant-btn.active {
+  background: rgba(204,50,146,.2);
+  color: #cc3292;
+}
+
+/* الأحجام */
+.sizes {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.sizes button {
+  flex: 1;
+  padding: 6px;
+  border-radius: 10px;
+  border: none;
+  background: #f6f6f6;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.sizes button.active {
+  background: #cc3292;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}

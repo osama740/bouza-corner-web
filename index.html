@@ -229,45 +229,37 @@
   <section id="juice" class="products-section">
     <h2>🥤 عصائر</h2>
     <div class="products">
-      <article class="product-card" data-name="عصير رمان">
-        <img src="https://via.placeholder.com/150" alt="">
-        <div class="product-info">
-          <h3>عصير رمان</h3>
-          <div class="sizes">
-            <button data-size="صغير" data-price="300000">صغير</button>
-            <button data-size="وسط" data-price="120000">وسط</button>
-            <button data-size="كبير" data-price="160000">كبير</button>
-          </div>
-          <div class="price">—</div>
-          <button class="add-btn">إضافة للسلة</button>
-        </div>
-      </article>
-      <article class="product-card" data-name="عصير مانغا">
-        <img src="https://via.placeholder.com/150" alt="">
-        <div class="product-info">
-          <h3>عصير مانغا</h3>
-          <div class="sizes">
-            <button data-size="صغير" data-price="80000">صغير</button>
-            <button data-size="وسط" data-price="130000">وسط</button>
-            <button data-size="كبير" data-price="170000">كبير</button>
-          </div>
-          <div class="price">—</div>
-          <button class="add-btn">إضافة للسلة</button>
-        </div>
-      </article>
-      <article class="product-card" data-name="عصير برتقال">
-        <img src="https://via.placeholder.com/150" alt="">
-        <div class="product-info">
-          <h3>عصير برتقال</h3>
-          <div class="sizes">
-            <button data-size="صغير" data-price="75000">صغير</button>
-            <button data-size="وسط" data-price="125000">وسط</button>
-            <button data-size="كبير" data-price="165000">كبير</button>
-          </div>
-          <div class="price">—</div>
-          <button class="add-btn">إضافة للسلة</button>
-        </div>
-      </article>
+    <article class="product-card" data-name="عصير رمان" data-type="juice">
+
+  <img src="https://via.placeholder.com/150" alt="">
+  <div class="product-info">
+    <h3>عصير رمان</h3>
+
+    <!-- نوع العبوة -->
+ <div class="variants">
+  <button class="variant-btn active" data-variant="كباية">كباية</button>
+  <button class="variant-btn" data-variant="قنينة">قنينة</button>
+</div>
+
+
+    <!-- أحجام الكباية -->
+    <div class="sizes sizes-cup">
+      <button data-size="صغير" data-price="300000">صغير</button>
+      <button data-size="وسط" data-price="120000">وسط</button>
+      <button data-size="كبير" data-price="160000">كبير</button>
+    </div>
+
+    <!-- أحجام القنينة -->
+    <div class="sizes sizes-bottle hidden">
+      <button data-size="صغير" data-price="200000">صغير</button>
+      <button data-size="كبير" data-price="350000">كبير</button>
+    </div>
+
+    <div class="price">—</div>
+    <button class="add-btn">إضافة للسلة</button>
+  </div>
+</article>
+
     </div>
   </section>
 

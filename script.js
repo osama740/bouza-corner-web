@@ -1,74 +1,125 @@
+/* ================= GLOBAL CART ================= */
 const cart = [];
 const cartOverlay = document.querySelector(".cart-overlay");
 const cartCount = document.getElementById("cartCount");
 const cartItems = document.getElementById("cartItems");
 const totalEl = document.getElementById("total");
 
-// عناصر modal الملاحظات
-const confirmOverlay = document.getElementById('confirmOverlay');
-const confirmBtn = document.getElementById('confirmBtn');
-const cancelBtn = document.getElementById('cancelBtn');
-const orderNote = document.getElementById('orderNote');
+/* ================= CONFIRM MODAL ================= */
+const confirmOverlay = document.getElementById("confirmOverlay");
+const confirmBtn = document.getElementById("confirmBtn");
+const cancelBtn = document.getElementById("cancelBtn");
+const orderNote = document.getElementById("orderNote");
 
-/* ================= SIZE SELECT ================= */
-document.querySelectorAll(".sizes button").forEach(btn => {
-  btn.onclick = () => {
-    const group = btn.parentElement;
-    group.querySelectorAll("button").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
+/* ================= PRODUCTS LOGIC ================= */
+document.querySelectorAll(".product-card").forEach(card => {
 
-    const card = btn.closest(".product-card");
-  card.querySelector(".price").innerText = Number(btn.dataset.price).toLocaleString() + " L.L";
+  const isJuice = card.dataset.type === "juice";
 
+  let selectedVariant = isJuice ? "كباية" : null;
+  let selectedSizeBtn = null;
 
+  const priceBox = card.querySelector(".price");
+
+  /* ===== VARIANT (JUICE ONLY) ===== */
+  if (isJuice) {
+    card.querySelectorAll(".variant-btn").forEach(btn => {
+      btn.onclick = () => {
+
+        card.querySelectorAll(".variant-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        selectedVariant = btn.dataset.variant;
+
+        // القنينة: صغير + كبير فقط
+        card.querySelectorAll(".sizes button").forEach(sizeBtn => {
+          const size = sizeBtn.dataset.size;
+
+          if (selectedVariant === "قنينة" && size === "وسط") {
+            sizeBtn.style.display = "none";
+            sizeBtn.classList.remove("active");
+          } else {
+            sizeBtn.style.display = "inline-block";
+          }
+        });
+
+        selectedSizeBtn = null;
+        priceBox.innerText = "—";
+      };
+    });
+  }
+
+  /* ===== SIZE SELECT ===== */
+  card.querySelectorAll(".sizes button").forEach(btn => {
+    btn.onclick = () => {
+      card.querySelectorAll(".sizes button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      selectedSizeBtn = btn;
+      priceBox.innerText =
+        Number(btn.dataset.price).toLocaleString() + " L.L";
+    };
+  });
+
+  /* ===== ADD TO CART ===== */
+  card.querySelector(".add-btn").onclick = () => {
+    if (!selectedSizeBtn) {
+      alert("اختر الحجم أولاً");
+      return;
+    }
+
+    let finalName = card.dataset.name;
+
+    // بس العصير نضيف كباية / قنينة
+    if (isJuice) {
+      finalName += ` - ${selectedVariant}`;
+    }
+
+    confirmOverlay.dataset.productName = finalName;
+    confirmOverlay.dataset.productSize = selectedSizeBtn.dataset.size;
+    confirmOverlay.dataset.productPrice = selectedSizeBtn.dataset.price;
+
+    orderNote.value = "";
+    confirmOverlay.classList.add("active");
   };
 });
 
-/* ================= ADD TO CART (Modal) ================= */
-document.querySelectorAll(".add-btn").forEach(btn => {
-  btn.onclick = () => {
-    const card = btn.closest(".product-card");
-    const size = card.querySelector(".sizes .active");
-    if(!size) return alert("اختر الحجم أولاً");
 
-    // حفظ المنتج في dataset قبل التأكيد
-    confirmOverlay.dataset.productName = card.dataset.name;
-    confirmOverlay.dataset.productSize = size.dataset.size;
-    confirmOverlay.dataset.productPrice = size.dataset.price;
-
-    orderNote.value = ""; // تفريغ الملاحظات
-    confirmOverlay.classList.add('active');
-  };
-});
-
-// زر تأكيد الطلب
-confirmBtn.addEventListener('click', () => {
-  const note = orderNote.value.trim();
+/* ================= CONFIRM ADD ================= */
+confirmBtn.onclick = () => {
   const name = confirmOverlay.dataset.productName;
   const size = confirmOverlay.dataset.productSize;
   const price = Number(confirmOverlay.dataset.productPrice);
+  const note = orderNote.value.trim();
 
-  cart.push({ name, size, price, notes: note ? note : null });
+  cart.push({
+    name,
+    size,
+    price,
+    notes: note || null
+  });
+
   renderCart();
+  confirmOverlay.classList.remove("active");
+};
 
-  confirmOverlay.classList.remove('active');
-});
-
-// زر إلغاء
-cancelBtn.addEventListener('click', () => {
-  confirmOverlay.classList.remove('active');
-});
+cancelBtn.onclick = () => {
+  confirmOverlay.classList.remove("active");
+};
 
 /* ================= RENDER CART ================= */
 function renderCart() {
   cartItems.innerHTML = "";
   let total = 0;
+
   cart.forEach((item, i) => {
     total += item.price;
+
     cartItems.innerHTML += `
       <div class="cart-item">
         <div>
-          ${item.name} (${item.size})${item.notes ? " - " + item.notes : ""}
+          ${item.name} (${item.size})
+          ${item.notes ? `<small> - ${item.notes}</small>` : ""}
         </div>
         <div>
           ${item.price.toLocaleString()} L.L
@@ -77,152 +128,121 @@ function renderCart() {
       </div>
     `;
   });
+
   cartCount.innerText = cart.length;
   totalEl.innerText = total.toLocaleString();
 }
 
-/* ================= REMOVE ITEM ================= */
 function removeItem(i) {
   cart.splice(i, 1);
   renderCart();
 }
 
 /* ================= CART TOGGLE ================= */
-document.querySelector(".cart-toggle").onclick = () => cartOverlay.classList.add("active");
-document.querySelector(".close-cart").onclick = () => cartOverlay.classList.remove("active");
+document.querySelector(".cart-toggle").onclick = () =>
+  cartOverlay.classList.add("active");
 
-/* ================= CLEAR CART ================= */
-document.querySelector(".clear-cart").onclick = () => { cart.length = 0; renderCart(); };
+document.querySelector(".close-cart").onclick = () =>
+  cartOverlay.classList.remove("active");
+
+document.querySelector(".clear-cart").onclick = () => {
+  cart.length = 0;
+  renderCart();
+};
+
 /* ================= WHATSAPP ================= */
 document.querySelector(".whatsapp").onclick = () => {
   if (!cart.length) return alert("السلة فارغة!");
 
-  let msg = ` طلب Bouza Corner:\n\n`;
+  let msg = `طلب Bouza Corner:\n\n`;
 
-  cart.forEach((item, index) => {
-    msg += `${index + 1}. ${item.name} (${item.size})`;
-    if(item.notes) msg += ` - ملاحظات: ${item.notes}`;
+  cart.forEach((item, i) => {
+    msg += `${i + 1}. ${item.name} (${item.size})`;
+    if (item.notes) msg += ` - ملاحظات: ${item.notes}`;
     msg += ` - ${item.price.toLocaleString()} L.L\n`;
   });
 
-  // Add total at the end
-  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  const total = cart.reduce((s, i) => s + i.price, 0);
   msg += `\nالمجموع: ${total.toLocaleString()} L.L`;
 
-  const whatsappNumber = "96103755931"; // replace with your number
-  const encodedMsg = encodeURIComponent(msg);
-  window.open(`https://wa.me/${whatsappNumber}?text=${encodedMsg}`, "_blank");
+  window.open(
+    `https://wa.me/96103755931?text=${encodeURIComponent(msg)}`,
+    "_blank"
+  );
 
-  // Clear the cart after sending
   cart.length = 0;
   renderCart();
+};
 
-}
-
-/* ================= NAV ACTIVE ON SCROLL (h2 trigger) ================= */
+/* ================= NAV ACTIVE ON SCROLL ================= */
 const sections = document.querySelectorAll("section[id]");
 const navLinks = document.querySelectorAll(".nav-link");
 
-// Helper to set active link
 function setActiveLink(id) {
-  navLinks.forEach(link => link.classList.remove("active"));
+  navLinks.forEach(l => l.classList.remove("active"));
   const link = document.querySelector(`.nav-link[href="#${id}"]`);
   if (link) link.classList.add("active");
 }
 
-// Scroll event
 window.addEventListener("scroll", () => {
-  let scrollY = window.scrollY;
-  let currentId = sections[0].id; // default first section
+  let currentId = sections[0].id;
 
   sections.forEach(section => {
     const h2 = section.querySelector("h2");
     if (!h2) return;
 
-    const h2Top = h2.getBoundingClientRect().top + window.scrollY;
-    const triggerPoint = window.innerHeight / 2; // trigger when h2 reaches middle of viewport
-
-    if(scrollY + triggerPoint >= h2Top){
+    const top = h2.getBoundingClientRect().top + window.scrollY;
+    if (window.scrollY + window.innerHeight / 2 >= top) {
       currentId = section.id;
     }
   });
 
   setActiveLink(currentId);
 });
-/* ================= SMOOTH SCROLL WITH CONTROLLED SPEED ================= */
-function smoothScrollTo(targetY, duration = 600) { // duration in ms
+
+/* ================= SMOOTH SCROLL ================= */
+function smoothScrollTo(targetY, duration = 800) {
   const startY = window.scrollY;
   const distance = targetY - startY;
   let startTime = null;
 
-  function animation(currentTime) {
-    if (!startTime) startTime = currentTime;
-    const timeElapsed = currentTime - startTime;
-    const progress = Math.min(timeElapsed / duration, 1);
-    
-    // ease in-out function
+  function animate(time) {
+    if (!startTime) startTime = time;
+    const progress = Math.min((time - startTime) / duration, 1);
     const ease = progress < 0.5
       ? 2 * progress * progress
-      : -1 + (4 - 2 * progress) * progress;
+      : 1 - Math.pow(-2 * progress + 2, 2) / 2;
 
     window.scrollTo(0, startY + distance * ease);
-
-    if (timeElapsed < duration) {
-      requestAnimationFrame(animation);
-    }
+    if (progress < 1) requestAnimationFrame(animate);
   }
 
-  requestAnimationFrame(animation);
+  requestAnimationFrame(animate);
 }
 
-// Apply to nav links
 navLinks.forEach(link => {
-  link.addEventListener("click", e => {
+  link.onclick = e => {
     e.preventDefault();
-    const targetId = link.getAttribute("href");
-    const targetSection = document.querySelector(targetId);
-    if(!targetSection) return;
-
-    const navHeight = document.querySelector('.navbar').offsetHeight;
-    const sectionTop = targetSection.offsetTop - navHeight - 10;
-
-    // Use our custom smooth scroll
-    smoothScrollTo(sectionTop, 800); // 800ms = slower, smooth feeling
-
-    // Update active immediately
-    setActiveLink(targetId.replace("#",""));
-  });
+    const target = document.querySelector(link.getAttribute("href"));
+    const offset = document.querySelector(".navbar").offsetHeight + 10;
+    smoothScrollTo(target.offsetTop - offset);
+  };
 });
 
-
-// Slow down manual scroll
-window.addEventListener('wheel', (e) => {
-  e.preventDefault(); // prevent default fast scroll
-  window.scrollBy({
-    top: e.deltaY * 0.3, // adjust 0.3 to your preferred speed (smaller = slower)
-    left: 0,
-    behavior: 'auto'
-  });
-}, { passive: false });
-
-
+/* ================= WELCOME SCREEN ================= */
 document.addEventListener("DOMContentLoaded", () => {
-  const welcomeScreen = document.getElementById("welcomeScreen");
+  const welcome = document.getElementById("welcomeScreen");
 
-  // Show only once per session
   if (!sessionStorage.getItem("welcomeShown")) {
-    welcomeScreen.classList.add("show"); // fade in
+    welcome.classList.add("show");
 
-    // Stay visible 2s then fade out
     setTimeout(() => {
-      welcomeScreen.style.opacity = "0"; // fade out
-      setTimeout(() => {
-        welcomeScreen.style.display = "none"; // hide completely
-      }, 1000); // match CSS transition
+      welcome.style.opacity = "0";
+      setTimeout(() => welcome.remove(), 1000);
     }, 2000);
 
     sessionStorage.setItem("welcomeShown", "true");
   } else {
-    welcomeScreen.style.display = "none";
+    welcome.remove();
   }
 });

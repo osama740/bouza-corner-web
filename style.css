@@ -742,3 +742,84 @@ h2, h3, .price, .brand-name{
 .nav-link i{
   font-size:16px;
 }
+/* ================= LOCATION ICON ================= */
+.location-sweet {
+  position: fixed;
+  top: 40px;          /* شوية مسافة من الأعلى */
+  left: 20px;         /* مسافة من اليسار */
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  gap: 4px;
+  z-index: 999;
+}
+
+/* الرابط */
+.location-sweet a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #cc3292;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+/* الأيقونة */
+.location-sweet i {
+  font-size: 20px;
+  color: #cc3292;
+  animation: bounce 1.5s infinite;
+  text-shadow:
+    0 0 4px #cc3292,
+    0 0 8px #e46da8,
+    0 0 12px #cc3292; /* glow effect */
+}
+
+/* حركة الأيقونة */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* خط متحرك أسفل النص */
+.location-sweet a span::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #cc3292,
+    #e46da8,
+    #cc3292,
+    transparent
+  );
+  animation: locationLine 3s ease-in-out infinite;
+}
+
+/* أنميشن الخط */
+@keyframes locationLine {
+  0% { width: 0%; opacity: 0; }
+  30% { width: 100%; opacity: 1; }
+  70% { width: 100%; opacity: 1; }
+  100% { width: 0%; opacity: 0; }
+}
+
+/* hover effect */
+.location-sweet a:hover {
+  color: #e46da8;
+}
+
+.location-sweet a:hover i {
+  color: #e46da8;
+  transform: scale(1.2);
+}

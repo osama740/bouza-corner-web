@@ -724,3 +724,13 @@ h2, h3, .price, .brand-name{
   font-family:'Changa', system-ui, sans-serif;
 }
 
+.nav-link{
+  display:flex;
+  flex-direction:column;   /* الأيقونة فوق النص */
+  align-items:center;
+  gap:4px;
+}
+
+.nav-link i{
+  font-size:16px;
+}

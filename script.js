@@ -179,7 +179,12 @@ document.querySelector(".whatsapp").onclick = () => {
   let msg = `طلب Bouza Corner:\n\n`;
 
   cart.forEach((item, i) => {
-    msg += `${i + 1}. ${item.name} (${item.size})`;
+    let displayName = item.name;
+    if (item.size) {
+      displayName += ` (${item.size})`;
+    }
+
+    msg += `${i + 1}. ${displayName}`;
     if (item.notes) msg += ` - ملاحظات: ${item.notes}`;
     msg += ` - ${item.price.toLocaleString()} L.L\n`;
   });
@@ -195,6 +200,7 @@ document.querySelector(".whatsapp").onclick = () => {
   cart.length = 0;
   renderCart();
 };
+
 
 /* ================= NAV ACTIVE ON SCROLL ================= */
 const sections = document.querySelectorAll("section[id]");

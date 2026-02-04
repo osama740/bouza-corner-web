@@ -61,34 +61,48 @@ document.querySelectorAll(".product-card").forEach(card => {
     };
   });
 
-  /* ===== ADD TO CART ===== */
-  card.querySelector(".add-btn").onclick = () => {
-    if (!selectedSizeBtn) {
-      alert("اختر الحجم أولاً");
-      return;
-    }
+/* ===== ADD TO CART ===== */
+card.querySelector(".add-btn").onclick = () => {
 
-    let finalName = card.dataset.name;
+  let finalName = card.dataset.name;
+  let finalPrice = "";
+  let finalSize = null; // 👈 بدل ""
 
-    // بس العصير نضيف كباية / قنينة
-    if (isJuice) {
-      finalName += ` - ${selectedVariant}`;
-    }
+  // إذا في زر حجم مختار
+  if (selectedSizeBtn) {
+    finalSize = selectedSizeBtn.dataset.size;
+    finalPrice = selectedSizeBtn.dataset.price;
+  } else {
+    // منتج بسعر واحد
+    finalPrice = card.dataset.price;
+  }
 
-    confirmOverlay.dataset.productName = finalName;
-    confirmOverlay.dataset.productSize = selectedSizeBtn.dataset.size;
-    confirmOverlay.dataset.productPrice = selectedSizeBtn.dataset.price;
+  // بس العصير نضيف كباية / قنينة
+  if (isJuice) {
+    finalName += " - " + selectedVariant;
+  }
 
-    orderNote.value = "";
-    confirmOverlay.classList.add("active");
-  };
+  confirmOverlay.dataset.productName = finalName;
+
+  // 👇 بس خزّن الحجم إذا موجود
+  if (finalSize) {
+    confirmOverlay.dataset.productSize = finalSize;
+  } else {
+    delete confirmOverlay.dataset.productSize;
+  }
+
+  confirmOverlay.dataset.productPrice = finalPrice;
+
+  orderNote.value = "";
+  confirmOverlay.classList.add("active");
+};
 });
 
 
 /* ================= CONFIRM ADD ================= */
 confirmBtn.onclick = () => {
   const name = confirmOverlay.dataset.productName;
-  const size = confirmOverlay.dataset.productSize;
+  const size = confirmOverlay.dataset.productSize || null; // 👈 المهم
   const price = Number(confirmOverlay.dataset.productPrice);
   const note = orderNote.value.trim();
 
@@ -107,6 +121,7 @@ cancelBtn.onclick = () => {
   confirmOverlay.classList.remove("active");
 };
 
+
 /* ================= RENDER CART ================= */
 function renderCart() {
   cartItems.innerHTML = "";
@@ -115,10 +130,16 @@ function renderCart() {
   cart.forEach((item, i) => {
     total += item.price;
 
+    // 👇 عرض الاسم بطريقة صحيحة
+    let displayName = item.name;
+    if (item.size) {
+      displayName += ` (${item.size})`;
+    }
+
     cartItems.innerHTML += `
       <div class="cart-item">
         <div>
-          ${item.name} (${item.size})
+          ${displayName}
           ${item.notes ? `<small> - ${item.notes}</small>` : ""}
         </div>
         <div>
@@ -137,6 +158,7 @@ function removeItem(i) {
   cart.splice(i, 1);
   renderCart();
 }
+
 
 /* ================= CART TOGGLE ================= */
 document.querySelector(".cart-toggle").onclick = () =>

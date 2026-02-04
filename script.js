@@ -13,9 +13,7 @@ const orderNote = document.getElementById("orderNote");
 
 /* ================= PRODUCTS LOGIC ================= */
 document.querySelectorAll(".product-card").forEach(card => {
-
   const isJuice = card.dataset.type === "juice";
-
   let selectedVariant = isJuice ? "كباية" : null;
   let selectedSizeBtn = null;
 
@@ -25,7 +23,6 @@ document.querySelectorAll(".product-card").forEach(card => {
   if (isJuice) {
     card.querySelectorAll(".variant-btn").forEach(btn => {
       btn.onclick = () => {
-
         card.querySelectorAll(".variant-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
 
@@ -34,7 +31,6 @@ document.querySelectorAll(".product-card").forEach(card => {
         // القنينة: صغير + كبير فقط
         card.querySelectorAll(".sizes button").forEach(sizeBtn => {
           const size = sizeBtn.dataset.size;
-
           if (selectedVariant === "قنينة" && size === "وسط") {
             sizeBtn.style.display = "none";
             sizeBtn.classList.remove("active");
@@ -56,58 +52,51 @@ document.querySelectorAll(".product-card").forEach(card => {
       btn.classList.add("active");
 
       selectedSizeBtn = btn;
-      priceBox.innerText =
-        Number(btn.dataset.price).toLocaleString() + " L.L";
+      priceBox.innerText = Number(btn.dataset.price).toLocaleString() + " L.L";
     };
   });
-/* ===== ADD TO CART ===== */
-card.querySelector(".add-btn").onclick = () => {
 
-  let finalName = card.dataset.name;
-  let finalPrice = "";
-  let finalSize = null;
+  /* ===== ADD TO CART ===== */
+  card.querySelector(".add-btn").onclick = () => {
+    let finalName = card.dataset.name;
+    let finalPrice = "";
+    let finalSize = null;
 
-  const sizeButtons = card.querySelectorAll(".sizes button"); // 👈 كل الأزرار
+    const sizeButtons = card.querySelectorAll(".sizes button");
 
-  // إذا المنتج عنده أحجام
-  if (sizeButtons.length > 0) {
-    if (!selectedSizeBtn) {
-      alert("الرجاء اختيار الحجم أولاً"); // 👈 منع الإضافة بدون اختيار
-      return;
+    if (sizeButtons.length > 0) {
+      if (!selectedSizeBtn) {
+        alert("الرجاء اختيار الحجم أولاً");
+        return;
+      }
+      finalSize = selectedSizeBtn.dataset.size;
+      finalPrice = selectedSizeBtn.dataset.price;
+    } else {
+      finalPrice = card.dataset.price;
     }
-    finalSize = selectedSizeBtn.dataset.size;
-    finalPrice = selectedSizeBtn.dataset.price;
-  } 
-  // إذا المنتج بسعر واحد فقط
-  else {
-    finalPrice = card.dataset.price;
-  }
 
-  // بس العصير نضيف كباية / قنينة
-  if (isJuice) {
-    finalName += " - " + selectedVariant;
-  }
+    if (isJuice) {
+      finalName += " - " + selectedVariant;
+    }
 
-  confirmOverlay.dataset.productName = finalName;
-  confirmOverlay.dataset.productPrice = finalPrice;
+    confirmOverlay.dataset.productName = finalName;
+    confirmOverlay.dataset.productPrice = finalPrice;
 
-  // 👇 بس خزّن الحجم إذا موجود
-  if (finalSize) {
-    confirmOverlay.dataset.productSize = finalSize;
-  } else {
-    delete confirmOverlay.dataset.productSize;
-  }
+    if (finalSize) {
+      confirmOverlay.dataset.productSize = finalSize;
+    } else {
+      delete confirmOverlay.dataset.productSize;
+    }
 
-  orderNote.value = "";
-  confirmOverlay.classList.add("active");
-};
-
-
+    orderNote.value = "";
+    confirmOverlay.classList.add("active");
+  };
+}); // ✅ إغلاق forEach لكل product-card
 
 /* ================= CONFIRM ADD ================= */
 confirmBtn.onclick = () => {
   const name = confirmOverlay.dataset.productName;
-  const size = confirmOverlay.dataset.productSize || null; // 👈 المهم
+  const size = confirmOverlay.dataset.productSize || null;
   const price = Number(confirmOverlay.dataset.productPrice);
   const note = orderNote.value.trim();
 
@@ -126,7 +115,6 @@ cancelBtn.onclick = () => {
   confirmOverlay.classList.remove("active");
 };
 
-
 /* ================= RENDER CART ================= */
 function renderCart() {
   cartItems.innerHTML = "";
@@ -135,21 +123,18 @@ function renderCart() {
   cart.forEach((item, i) => {
     total += item.price;
 
-    // 👇 عرض الاسم بطريقة صحيحة
     let displayName = item.name;
-    if (item.size) {
-      displayName += ` (${item.size})`;
-    }
+    if (item.size) displayName += ` (${item.size})`;
 
     cartItems.innerHTML += `
-      <div class="cart-item">
+      <div class="cart-item" data-index="${i}">
         <div>
           ${displayName}
           ${item.notes ? `<small> - ${item.notes}</small>` : ""}
         </div>
         <div>
           ${item.price.toLocaleString()} L.L
-          <span class="remove" onclick="removeItem(${i})">حذف</span>
+          <span class="remove">حذف</span>
         </div>
       </div>
     `;
@@ -157,26 +142,31 @@ function renderCart() {
 
   cartCount.innerText = cart.length;
   totalEl.innerText = total.toLocaleString();
+
+  // 👇 attach remove handlers dynamically
+  cartItems.querySelectorAll(".remove").forEach(btn => {
+    btn.onclick = () => {
+      const index = Number(btn.closest(".cart-item").dataset.index);
+      removeItem(index);
+    };
+  });
 }
 
+/* ================= REMOVE ITEM ================= */
 function removeItem(i) {
   cart.splice(i, 1);
   renderCart();
 }
-}); // ✅ إغلاق forEach لكل product-card
 
-
-/* ================= CART TOGGLE ================= */
-document.querySelector(".cart-toggle").onclick = () =>
-  cartOverlay.classList.add("active");
-
-document.querySelector(".close-cart").onclick = () =>
-  cartOverlay.classList.remove("active");
-
+/* ================= CLEAR CART ================= */
 document.querySelector(".clear-cart").onclick = () => {
   cart.length = 0;
   renderCart();
 };
+
+/* ================= CART TOGGLE ================= */
+document.querySelector(".cart-toggle").onclick = () => cartOverlay.classList.add("active");
+document.querySelector(".close-cart").onclick = () => cartOverlay.classList.remove("active");
 
 /* ================= WHATSAPP ================= */
 document.querySelector(".whatsapp").onclick = () => {
@@ -186,13 +176,9 @@ document.querySelector(".whatsapp").onclick = () => {
 
   cart.forEach((item, i) => {
     let displayName = item.name;
-    if (item.size) {
-      displayName += ` (${item.size})`;
-    }
-
-    msg += `${i + 1}. ${displayName}`;
-    if (item.notes) msg += ` - ملاحظات: ${item.notes}`;
-    msg += ` - ${item.price.toLocaleString()} L.L\n`;
+    if (item.size) displayName += ` (${item.size})`;
+    if (item.notes) displayName += ` - ملاحظات: ${item.notes}`;
+    msg += `${i + 1}. ${displayName} - ${item.price.toLocaleString()} L.L\n`;
   });
 
   const total = cart.reduce((s, i) => s + i.price, 0);
@@ -206,7 +192,6 @@ document.querySelector(".whatsapp").onclick = () => {
   cart.length = 0;
   renderCart();
 };
-
 
 /* ================= NAV ACTIVE ON SCROLL ================= */
 const sections = document.querySelectorAll("section[id]");

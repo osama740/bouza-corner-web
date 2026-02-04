@@ -60,20 +60,26 @@ document.querySelectorAll(".product-card").forEach(card => {
         Number(btn.dataset.price).toLocaleString() + " L.L";
     };
   });
-
 /* ===== ADD TO CART ===== */
 card.querySelector(".add-btn").onclick = () => {
 
   let finalName = card.dataset.name;
   let finalPrice = "";
-  let finalSize = null; // 👈 بدل ""
+  let finalSize = null;
 
-  // إذا في زر حجم مختار
-  if (selectedSizeBtn) {
+  const sizeButtons = card.querySelectorAll(".sizes button"); // 👈 كل الأزرار
+
+  // إذا المنتج عنده أحجام
+  if (sizeButtons.length > 0) {
+    if (!selectedSizeBtn) {
+      alert("الرجاء اختيار الحجم أولاً"); // 👈 منع الإضافة بدون اختيار
+      return;
+    }
     finalSize = selectedSizeBtn.dataset.size;
     finalPrice = selectedSizeBtn.dataset.price;
-  } else {
-    // منتج بسعر واحد
+  } 
+  // إذا المنتج بسعر واحد فقط
+  else {
     finalPrice = card.dataset.price;
   }
 
@@ -83,6 +89,7 @@ card.querySelector(".add-btn").onclick = () => {
   }
 
   confirmOverlay.dataset.productName = finalName;
+  confirmOverlay.dataset.productPrice = finalPrice;
 
   // 👇 بس خزّن الحجم إذا موجود
   if (finalSize) {
@@ -91,12 +98,10 @@ card.querySelector(".add-btn").onclick = () => {
     delete confirmOverlay.dataset.productSize;
   }
 
-  confirmOverlay.dataset.productPrice = finalPrice;
-
   orderNote.value = "";
   confirmOverlay.classList.add("active");
 };
-});
+
 
 
 /* ================= CONFIRM ADD ================= */
@@ -158,6 +163,7 @@ function removeItem(i) {
   cart.splice(i, 1);
   renderCart();
 }
+}); // ✅ إغلاق forEach لكل product-card
 
 
 /* ================= CART TOGGLE ================= */

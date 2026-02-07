@@ -7,7 +7,7 @@
   "theme_color": "#cc3292",
   "icons": [
     {
-      "src": "bouza_corner_logo_white-removebg-preview.png",
+      "src": "assets/images/logo/bouza-corner-logo-white.png",
       "sizes": "512x512",
       "type": "image/png"
     }

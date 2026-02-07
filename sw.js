@@ -1,11 +1,12 @@
-const CACHE_NAME = "bouza-corner-v1";
+const CACHE_NAME = "bouza-corner-v4";
 const ASSETS = [
   ".",
   "index.html",
   "style.css",
   "script.js",
   "manifest.json",
-  "bouza_corner_logo_white-removebg-preview.png"
+  "assets/images/logo/bouza-corner-logo-white.png",
+  "assets/images/welcome/welcome-logo.png"
 ];
 
 self.addEventListener("install", event => {

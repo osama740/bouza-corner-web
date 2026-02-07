@@ -1,6 +1,7 @@
 /* ================= GLOBAL CART ================= */
 const cart = [];
 const cartOverlay = document.querySelector(".cart-overlay");
+const cartToggle = document.querySelector(".cart-toggle");
 const cartCount = document.getElementById("cartCount");
 const cartItems = document.getElementById("cartItems");
 const totalEl = document.getElementById("total");
@@ -112,6 +113,11 @@ confirmBtn.onclick = () => {
   });
 
   renderCart();
+  if (cartToggle) {
+    cartToggle.classList.remove("pulse");
+    void cartToggle.offsetWidth;
+    cartToggle.classList.add("pulse");
+  }
   confirmOverlay.classList.remove("active");
 };
 
@@ -271,9 +277,63 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+/* ================= FADE-IN ON SCROLL ================= */
+document.addEventListener("DOMContentLoaded", () => {
+  const cards = document.querySelectorAll(".product-card");
+  cards.forEach(card => card.classList.add("fade-in"));
+
+  if ("IntersectionObserver" in window) {
+    const fadeObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            fadeObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    cards.forEach(card => fadeObserver.observe(card));
+  } else {
+    cards.forEach(card => card.classList.add("in-view"));
+  }
+});
+
 /* ================= SERVICE WORKER ================= */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js");
   });
+}
+
+/* ================= LIGHTBOX ================= */
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightboxImg");
+const lightboxClose = document.querySelector(".lightbox-close");
+
+document.querySelectorAll(".product-card img").forEach(img => {
+  img.style.cursor = "zoom-in";
+  img.addEventListener("click", () => {
+    if (!lightbox || !lightboxImg) return;
+    lightboxImg.src = img.getAttribute("src");
+    lightbox.classList.add("active");
+  });
+});
+
+function closeLightbox() {
+  if (!lightbox || !lightboxImg) return;
+  lightbox.classList.remove("active");
+  lightboxImg.src = "";
+}
+
+if (lightbox) {
+  lightbox.addEventListener("click", e => {
+    if (e.target === lightbox) closeLightbox();
+  });
+}
+
+if (lightboxClose) {
+  lightboxClose.addEventListener("click", closeLightbox);
 }

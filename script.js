@@ -256,6 +256,14 @@ navLinks.forEach(link => {
     const target = document.querySelector(link.getAttribute("href"));
     const offset = document.querySelector(".navbar").offsetHeight + 10;
     smoothScrollTo(target.offsetTop - offset);
+
+    link.classList.remove("pulse");
+    void link.offsetWidth;
+    link.classList.add("pulse");
+
+    link.classList.remove("light-sweep");
+    void link.offsetWidth;
+    link.classList.add("light-sweep");
   };
 });
 

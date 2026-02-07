@@ -1,4 +1,4 @@
-const CACHE_NAME = "bouza-corner-v4";
+const CACHE_NAME = "bouza-corner-v6";
 const ASSETS = [
   ".",
   "index.html",

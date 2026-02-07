@@ -350,6 +350,16 @@ body{background:#fff;color:#222;scroll-behavior:smooth;}
   flex-wrap:wrap;
 }
 
+.cart-thumb{
+  width:48px;
+  height:48px;
+  object-fit:contain;
+  border-radius:10px;
+  background:#fff;
+  border:1px solid #eee;
+  flex-shrink:0;
+}
+
 .cart-item div:first-child{
   display:flex;
   flex-direction:column;

@@ -61,6 +61,7 @@ document.querySelectorAll(".product-card").forEach(card => {
     let finalName = card.dataset.name;
     let finalPrice = "";
     let finalSize = null;
+    const productImage = card.querySelector("img")?.getAttribute("src") || "";
 
     const sizeButtons = card.querySelectorAll(".sizes button");
 
@@ -81,6 +82,7 @@ document.querySelectorAll(".product-card").forEach(card => {
 
     confirmOverlay.dataset.productName = finalName;
     confirmOverlay.dataset.productPrice = finalPrice;
+    confirmOverlay.dataset.productImage = productImage;
 
     if (finalSize) {
       confirmOverlay.dataset.productSize = finalSize;
@@ -98,12 +100,14 @@ confirmBtn.onclick = () => {
   const name = confirmOverlay.dataset.productName;
   const size = confirmOverlay.dataset.productSize || null;
   const price = Number(confirmOverlay.dataset.productPrice);
+  const image = confirmOverlay.dataset.productImage || "";
   const note = orderNote.value.trim();
 
   cart.push({
     name,
     size,
     price,
+    image,
     notes: note || null
   });
 
@@ -128,6 +132,7 @@ function renderCart() {
 
     cartItems.innerHTML += `
       <div class="cart-item" data-index="${i}">
+        ${item.image ? `<img class="cart-thumb" src="${item.image}" alt="${item.name}">` : ""}
         <div>
           ${displayName}
           ${item.notes ? `<small> - ${item.notes}</small>` : ""}
@@ -265,3 +270,10 @@ document.addEventListener("DOMContentLoaded", () => {
     welcome.remove();
   }
 });
+
+/* ================= SERVICE WORKER ================= */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js");
+  });
+}
